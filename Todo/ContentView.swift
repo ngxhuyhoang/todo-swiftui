@@ -16,6 +16,7 @@ struct TodoItemData {
 struct ContentView: View {
     @State private var _content: String = ""
     @State private var _todoList: [TodoItemData] = []
+    @FocusState private var _isFocused: Bool
     
     var body: some View {
         NavigationView {
@@ -24,9 +25,15 @@ struct ContentView: View {
                     TextField("What are you doing today ?", text: $_content)
                         .frame(height: 36)
                         .textFieldStyle(.roundedBorder)
+                        .focused($_isFocused)
                     Button(action: {
+                        if _content.isEmpty {
+                            _isFocused = false
+                            return
+                        }
                         _todoList.append(TodoItemData(content: _content, isCompleted: false))
                         _content = ""
+                        _isFocused = false
                     }, label: {
                         Image(systemName: "plus.app.fill")
                     })
